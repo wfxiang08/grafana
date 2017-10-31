@@ -23,6 +23,7 @@ type MysqlQueryEndpoint struct {
 }
 
 func init() {
+	// 如何处理MySQL的监控呢?
 	tsdb.RegisterTsdbQueryEndpoint("mysql", NewMysqlQueryEndpoint)
 }
 
@@ -31,6 +32,7 @@ func NewMysqlQueryEndpoint(datasource *models.DataSource) (tsdb.TsdbQueryEndpoin
 		log: log.New("tsdb.mysql"),
 	}
 
+	// sql如何和tsdb对接呢?
 	endpoint.sqlEngine = &tsdb.DefaultSqlEngine{
 		MacroEngine: NewMysqlMacroEngine(),
 	}

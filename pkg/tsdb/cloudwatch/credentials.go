@@ -140,7 +140,9 @@ func ec2RoleProvider(sess *session.Session) credentials.Provider {
 	return &ec2rolecreds.EC2RoleProvider{Client: ec2metadata.New(sess), ExpiryWindow: 5 * time.Minute}
 }
 
+// 获取aws账号相关的配置
 func (e *CloudWatchExecutor) getDsInfo(region string) *DatasourceInfo {
+	// authType
 	authType := e.DataSource.JsonData.Get("authType").MustString()
 	assumeRoleArn := e.DataSource.JsonData.Get("assumeRoleArn").MustString()
 	accessKey := ""
@@ -154,6 +156,7 @@ func (e *CloudWatchExecutor) getDsInfo(region string) *DatasourceInfo {
 		}
 	}
 
+	// Namespace默认为空
 	datasourceInfo := &DatasourceInfo{
 		Region:        region,
 		Profile:       e.DataSource.Database,
@@ -180,7 +183,12 @@ func (e *CloudWatchExecutor) getAwsConfig(dsInfo *DatasourceInfo) (*aws.Config, 
 }
 
 func (e *CloudWatchExecutor) getClient(region string) (*cloudwatch.CloudWatch, error) {
+	// 获取aws账号相关的配置
 	datasourceInfo := e.getDsInfo(region)
+
+	// Adapter:  datasourceInfo ---> cfg
+	//           cfg --> session --> cloudwatch client
+	//
 	cfg, err := e.getAwsConfig(datasourceInfo)
 	if err != nil {
 		return nil, err

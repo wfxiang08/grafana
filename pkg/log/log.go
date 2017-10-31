@@ -170,9 +170,13 @@ func getLogFormat(format string) log15.Format {
 	}
 }
 
+//
+// 读取Log的配置
+//
 func ReadLoggingConfig(modes []string, logsPath string, cfg *ini.File) {
 	Close()
 
+	// 读取log level
 	defaultLevelName, _ := getLogLevelFromConfig("log", "info", cfg)
 	defaultFilters := getFilters(util.SplitString(cfg.Section("log").Key("filters").String()))
 
@@ -197,8 +201,11 @@ func ReadLoggingConfig(modes []string, logsPath string, cfg *ini.File) {
 		case "console":
 			handler = log15.StreamHandler(os.Stdout, format)
 		case "file":
+			// file log
 			fileName := sec.Key("file_name").MustString(filepath.Join(logsPath, "grafana.log"))
 			os.MkdirAll(filepath.Dir(fileName), os.ModePerm)
+
+			// file的配置
 			fileHandler := NewFileWriter()
 			fileHandler.Filename = fileName
 			fileHandler.Format = format

@@ -467,7 +467,9 @@ func NewConfigContext(args *CommandLineArgs) error {
 	setHomePath(args)
 	loadConfiguration(args)
 
+	// 开发环境下有更多的Log, 其他和production模式没有本质的区别
 	Env = Cfg.Section("").Key("app_mode").MustString("development")
+
 	InstanceName = Cfg.Section("").Key("instance_name").MustString("unknown_instance_name")
 	PluginsPath = makeAbsolute(Cfg.Section("paths").Key("plugins").String(), HomePath)
 

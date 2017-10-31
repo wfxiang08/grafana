@@ -36,12 +36,15 @@ var (
 
 func init() {
 	glog = log.New("tsdb.influxdb")
+
+	// 注册 InfluxDB
 	tsdb.RegisterTsdbQueryEndpoint("influxdb", NewInfluxDBExecutor)
 }
 
 func (e *InfluxDBExecutor) Query(ctx context.Context, dsInfo *models.DataSource, tsdbQuery *tsdb.TsdbQuery) (*tsdb.Response, error) {
 	result := &tsdb.Response{}
 
+	// 直接处理 tsdb的Queries
 	query, err := e.getQuery(dsInfo, tsdbQuery.Queries, tsdbQuery)
 	if err != nil {
 		return nil, err

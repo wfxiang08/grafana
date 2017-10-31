@@ -7,6 +7,7 @@ import (
 )
 
 type TsdbQuery struct {
+	// 共享同一个区间，多个不同的Query
 	TimeRange *TimeRange
 	Queries   []*Query
 }
