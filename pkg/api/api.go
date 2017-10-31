@@ -264,7 +264,9 @@ func (hs *HttpServer) registerRoutes() {
 		apiRoute.Get("/search/", Search)
 
 		// metrics
+		// 4.6版本调用的接口
 		apiRoute.Post("/tsdb/query", bind(dtos.MetricRequest{}), wrap(QueryMetrics))
+
 		apiRoute.Get("/tsdb/testdata/scenarios", wrap(GetTestDataScenarios))
 		apiRoute.Get("/tsdb/testdata/gensql", reqGrafanaAdmin, wrap(GenerateSqlTestData))
 		apiRoute.Get("/tsdb/testdata/random-walk", wrap(GetTestDataRandomWalk))

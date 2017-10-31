@@ -14,6 +14,8 @@ import (
 )
 
 // POST /api/tsdb/query
+// 参考请求:
+// {"from":"1509447918247","to":"1509469518247","queries":[{"refId":"A","intervalMs":15000,"maxDataPoints":1428,"datasourceId":1,"type":"timeSeriesQuery","dimensions":{"DBInstanceIdentifier":"starmaker-backend"},"metricName":"CPUUtilization","namespace":"AWS/RDS","period":"60","region":"us-west-2","statistics":["Average"]}]}
 func QueryMetrics(c *middleware.Context, reqDto dtos.MetricRequest) Response {
 	timeRange := tsdb.NewTimeRange(reqDto.From, reqDto.To)
 
@@ -43,6 +45,7 @@ func QueryMetrics(c *middleware.Context, reqDto dtos.MetricRequest) Response {
 		})
 	}
 
+	// 通过endpoint来访问数据
 	resp, err := tsdb.HandleRequest(context.Background(), dsQuery.Result, request)
 	if err != nil {
 		return ApiError(500, "Metric request error", err)
