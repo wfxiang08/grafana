@@ -38,13 +38,14 @@ func Init() error {
 	plog = log.New("plugins")
 
 	DataSources = make(map[string]*DataSourcePlugin)
+
 	StaticRoutes = make([]*PluginStaticRoute, 0)
 	Panels = make(map[string]*PanelPlugin)
 	Apps = make(map[string]*AppPlugin)
 	Plugins = make(map[string]*PluginBase)
 	PluginTypes = map[string]interface{}{
 		"panel":      PanelPlugin{},
-		"datasource": DataSourcePlugin{},
+		"datasource": DataSourcePlugin{}, // 例如: cloudwatch
 		"app":        AppPlugin{},
 	}
 
@@ -128,6 +129,7 @@ func (scanner *PluginScanner) walker(currentPath string, f os.FileInfo, err erro
 	}
 
 	if f.Name() == "plugin.json" {
+		// 如何处理 plugin.json这个文件呢?
 		err := scanner.loadPluginJson(currentPath)
 		if err != nil {
 			log.Error(3, "Plugins: Failed to load plugin json file: %v,  err: %v", currentPath, err)
@@ -148,6 +150,8 @@ func (scanner *PluginScanner) loadPluginJson(pluginJsonFilePath string) error {
 
 	jsonParser := json.NewDecoder(reader)
 	pluginCommon := PluginBase{}
+
+	// 解析json
 	if err := jsonParser.Decode(&pluginCommon); err != nil {
 		return err
 	}
@@ -157,12 +161,16 @@ func (scanner *PluginScanner) loadPluginJson(pluginJsonFilePath string) error {
 	}
 
 	var loader PluginLoader
+
+	// 类型必须是已知的
+	// 例如: cloudwatch 属于datasource
 	if pluginGoType, exists := PluginTypes[pluginCommon.Type]; !exists {
 		return errors.New("Unknown plugin type " + pluginCommon.Type)
 	} else {
 		loader = reflect.New(reflect.TypeOf(pluginGoType)).Interface().(PluginLoader)
 	}
 
+	// 做一些基本检查之后，在重新parse
 	reader.Seek(0, 0)
 	return loader.Load(jsonParser, currentDir)
 }

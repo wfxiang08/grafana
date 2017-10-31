@@ -60,6 +60,8 @@ func (g *GrafanaServerImpl) Start() {
 	login.Init()
 	social.NewOAuthService()
 	eventpublisher.Init()
+
+	// 初始化plugins
 	plugins.Init()
 
 	closer, err := tracing.Init(setting.Cfg)

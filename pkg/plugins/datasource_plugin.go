@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 )
 
+// 如何加载Plugin呢?
 type DataSourcePlugin struct {
 	FrontendPluginBase
 	Annotations  bool              `json:"annotations"`
@@ -36,6 +37,7 @@ func (p *DataSourcePlugin) Load(decoder *json.Decoder, pluginDir string) error {
 		p.HasQueryHelp = true
 	}
 
+	// DataSource Plugin
 	DataSources[p.Id] = p
 	return nil
 }

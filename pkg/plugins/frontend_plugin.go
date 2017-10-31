@@ -60,6 +60,7 @@ func (fp *FrontendPluginBase) handleModuleDefaults() {
 	}
 
 	fp.IsCorePlugin = true
+	// Module/BaseUrl都是和js相关的
 	fp.Module = path.Join("app/plugins", fp.Type, fp.Id, "module")
 	fp.BaseUrl = path.Join("public/app/plugins", fp.Type, fp.Id)
 }

@@ -219,6 +219,10 @@ func (hs *HttpServer) registerRoutes() {
 		}, reqOrgAdmin)
 
 		apiRoute.Get("/frontend/settings/", GetFrontendSettings)
+
+		// XXX: 通过指定的datasource来获取数据
+		// 例如: api/datasources/proxy/2
+		//
 		apiRoute.Any("/datasources/proxy/:id/*", reqSignedIn, hs.ProxyDataSourceRequest)
 		apiRoute.Any("/datasources/proxy/:id", reqSignedIn, hs.ProxyDataSourceRequest)
 

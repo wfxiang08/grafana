@@ -48,8 +48,9 @@ type DataSource struct {
 	BasicAuthPassword string
 	WithCredentials   bool
 	IsDefault         bool
-	JsonData          *simplejson.Json              // 普通的数据
-	SecureJsonData    securejsondata.SecureJsonData // 加密数据
+
+	JsonData       *simplejson.Json              // 普通的数据
+	SecureJsonData securejsondata.SecureJsonData // 加密数据
 
 	Created time.Time
 	Updated time.Time

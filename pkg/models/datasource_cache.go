@@ -53,6 +53,7 @@ func (ds *DataSource) GetHttpTransport() (*http.Transport, error) {
 		tlsSkipVerify = ds.JsonData.Get("tlsSkipVerify").MustBool(false)
 	}
 
+	// 创建一个Proxy
 	transport := &http.Transport{
 		TLSClientConfig: &tls.Config{
 			InsecureSkipVerify: tlsSkipVerify,

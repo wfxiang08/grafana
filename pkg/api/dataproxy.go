@@ -17,6 +17,7 @@ const HeaderNameNoBackendCache = "X-Grafana-NoCache"
 func (hs *HttpServer) getDatasourceById(id int64, orgId int64, nocache bool) (*m.DataSource, error) {
 	cacheKey := fmt.Sprintf("ds-%d", id)
 
+	// 这里有一个比较烦人的东西: cache, 还好只是内存级别的；重启之后就没有了
 	if !nocache {
 		if cached, found := hs.cache.Get(cacheKey); found {
 			ds := cached.(*m.DataSource)
@@ -40,14 +41,18 @@ func (hs *HttpServer) ProxyDataSourceRequest(c *middleware.Context) {
 
 	nocache := c.Req.Header.Get(HeaderNameNoBackendCache) == "true"
 
+	// XXX: 通过指定的datasource来获取数据
 	ds, err := hs.getDatasourceById(c.ParamsInt64(":id"), c.OrgId, nocache)
 
 	if err != nil {
+		// 很奇怪，这种情况为什么会出现呢?
 		c.JsonApiErr(500, "Unable to load datasource meta data", err)
 		return
 	}
 
+	// DataSource和Plugin关系?
 	// find plugin
+	// Cloudwatch在pkg/plugins/plugins.go中注册
 	plugin, ok := plugins.DataSources[ds.Type]
 	if !ok {
 		c.JsonApiErr(500, "Unable to find datasource plugin", err)

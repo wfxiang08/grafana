@@ -55,8 +55,9 @@ func (app *AppPlugin) Load(decoder *json.Decoder, pluginDir string) error {
 }
 
 func (app *AppPlugin) initApp() {
-	app.initFrontendPlugin()
+	// 遍历:  public/app/plugins目录，....
 
+	app.initFrontendPlugin()
 	// check if we have child panels
 	for _, panel := range Panels {
 		if strings.HasPrefix(panel.PluginDir, app.PluginDir) {

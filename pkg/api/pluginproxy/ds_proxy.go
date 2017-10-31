@@ -67,11 +67,13 @@ func (proxy *DataSourceProxy) HandleRequest() {
 		return
 	}
 
+	// 反向代理?
 	reverseProxy := &httputil.ReverseProxy{
 		Director:      proxy.getDirector(),
 		FlushInterval: time.Millisecond * 200,
 	}
 
+	// ds基本上也不做什么事情?
 	var err error
 	reverseProxy.Transport, err = proxy.ds.GetHttpTransport()
 	if err != nil {
@@ -95,6 +97,7 @@ func (proxy *DataSourceProxy) HandleRequest() {
 		opentracing.HTTPHeaders,
 		opentracing.HTTPHeadersCarrier(proxy.ctx.Req.Request.Header))
 
+	// 直接通过Http转发
 	reverseProxy.ServeHTTP(proxy.ctx.Resp, proxy.ctx.Req.Request)
 	proxy.ctx.Resp.Header().Del("Set-Cookie")
 }
@@ -157,6 +160,7 @@ func (proxy *DataSourceProxy) getDirector() func(req *http.Request) {
 			}
 		}
 
+		// 设置权限...
 		if proxy.route != nil {
 			proxy.applyRoute(req)
 		}
@@ -254,6 +258,7 @@ func checkWhiteList(c *middleware.Context, host string) bool {
 func (proxy *DataSourceProxy) applyRoute(req *http.Request) {
 	proxy.proxyPath = strings.TrimPrefix(proxy.proxyPath, proxy.route.Path)
 
+	// 得到有效的数据
 	data := templateData{
 		JsonData:       proxy.ds.JsonData.Interface().(map[string]interface{}),
 		SecureJsonData: proxy.ds.SecureJsonData.Decrypt(),
