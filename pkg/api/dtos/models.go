@@ -87,10 +87,11 @@ func (slice DataSourceList) Swap(i, j int) {
 	slice[i], slice[j] = slice[j], slice[i]
 }
 
+// 如何通过JSON来解析请求的Parammeters?
 type MetricRequest struct {
 	From    string             `json:"from"`
 	To      string             `json:"to"`
-	Queries []*simplejson.Json `json:"queries"`
+	Queries []*simplejson.Json `json:"queries"` // 如何处理通用的JSON数据
 }
 
 type UserStars struct {

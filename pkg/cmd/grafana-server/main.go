@@ -36,6 +36,9 @@ var commit = "NA"
 var buildstamp string
 var build_date string
 
+// 几个关键参数：
+// config
+// homepath: 这个地方可以访问h5, tempalte等
 var configFile = flag.String("config", "", "path to config file")
 var homePath = flag.String("homepath", "", "path to grafana install/home path, defaults to working directory")
 var pidFile = flag.String("pidfile", "", "path to pid file")

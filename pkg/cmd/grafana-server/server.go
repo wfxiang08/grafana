@@ -135,6 +135,7 @@ func (g *GrafanaServerImpl) Shutdown(code int, reason string) {
 	os.Exit(code)
 }
 
+// 写pid, 如果推出也不做什么事情
 func (g *GrafanaServerImpl) writePIDFile() {
 	if *pidFile == "" {
 		return

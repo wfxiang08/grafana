@@ -222,7 +222,7 @@ func (hs *HttpServer) registerRoutes() {
 
 		// XXX: 通过指定的datasource来获取数据
 		// 例如: api/datasources/proxy/2
-		//
+		// 这里只是把请求做了一个转发，没有做更多的工作; cloudwatch等也在走proxy接口。而是走: /api/tsdb/query 接口
 		apiRoute.Any("/datasources/proxy/:id/*", reqSignedIn, hs.ProxyDataSourceRequest)
 		apiRoute.Any("/datasources/proxy/:id", reqSignedIn, hs.ProxyDataSourceRequest)
 

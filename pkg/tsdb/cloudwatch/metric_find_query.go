@@ -537,6 +537,7 @@ func getAllMetrics(cwData *DatasourceInfo) (cloudwatch.ListMetricsOutput, error)
 
 var metricsCacheLock sync.Mutex
 
+// 读取Metrics
 func getMetricsForCustomMetrics(dsInfo *DatasourceInfo, getAllMetrics func(*DatasourceInfo) (cloudwatch.ListMetricsOutput, error)) ([]string, error) {
 	metricsCacheLock.Lock()
 	defer metricsCacheLock.Unlock()
@@ -551,6 +552,8 @@ func getMetricsForCustomMetrics(dsInfo *DatasourceInfo, getAllMetrics func(*Data
 		customMetricsMetricsMap[dsInfo.Profile][dsInfo.Region][dsInfo.Namespace] = &CustomMetricsCache{}
 		customMetricsMetricsMap[dsInfo.Profile][dsInfo.Region][dsInfo.Namespace].Cache = make([]string, 0)
 	}
+
+	// TODO: <Profile, Region, Namespace> 直接构建一个Key, 避免3级map
 
 	if customMetricsMetricsMap[dsInfo.Profile][dsInfo.Region][dsInfo.Namespace].Expire.After(time.Now()) {
 		return customMetricsMetricsMap[dsInfo.Profile][dsInfo.Region][dsInfo.Namespace].Cache, nil
